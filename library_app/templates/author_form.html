@@ -1,0 +1,21 @@
+<!--   
+   library_app/templates/author_form.html
+   Erweitert layout.html mit einer Maske zum Hinzufügen eines Autors.
+-->
+
+{% extends 'layout.html' %}
+{% block content %}
+    <h2>Autor {{ action }}</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" name="name" value="{{ author.name or '' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="biography">Biografie</label>
+            <textarea class="form-control" name="biography" rows="4">{{ author.biography or '' }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Speichern</button>
+        <a href="{{ url_for('authors.list_authors') }}" class="btn btn-secondary">Abbrechen</a>
+    </form>
+{% endblock %}

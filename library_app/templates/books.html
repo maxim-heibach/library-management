@@ -1,0 +1,72 @@
+<!--   
+   library_app/templates/books.html
+   Erweitert layout.html indem es die Bücher-Tabelle und die damit verbundenen Funktionalitäten 
+   zur Verfügung stellt. 
+-->
+
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Bücherliste</h2>
+        <div>
+            {% if current_user.is_authenticated and current_user.role in ['admin', 'librarian'] %}
+                <a href="{{ url_for('books.add_book') }}" class="btn btn-success">Buch hinzufügen</a>
+            {% endif %}
+            {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                <a href="{{ url_for('main.export_books_csv') }}" class="btn btn-info">Als CSV exportieren</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <form method="GET" action="{{ url_for('books.list_books') }}" class="form-inline mb-4">
+        <input type="text" name="search" class="form-control mr-sm-2 flex-grow-1" placeholder="Suche nach Titel, Autor oder ISBN..." value="{{ request.args.get('search', '') }}">
+        <button type="submit" class="btn btn-outline-primary">Suchen</button>
+        <a href="{{ url_for('books.list_books') }}" class="btn btn-outline-secondary ml-2">Zurücksetzen</a>
+    </form>
+
+    <table class="table table-striped table-fixed-header">
+        <thead>
+            <tr>
+                <th style="width: 30%;">Titel</th>
+                <th style="width: 25%;">Autor</th>
+                <th style="width: 15%;">ISBN</th>
+                <th style="width: 15%;">Verfügbarkeit</th>
+                <th style="width: 15%;">Aktionen</th>
+            </tr>
+        </thead>
+    </table>
+    
+    <div class="table-container">
+        <table class="table table-striped">
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td style="width: 30%;">{{ book.title }}</td>
+                    <td style="width: 25%;">{{ book.author_name }}</td>
+                    <td style="width: 15%;">{{ book.isbn }}</td>
+                    <td style="width: 15%;">
+                        {% if book.available_copies > 0 %}
+                            <span class="badge badge-success">{{ book.available_copies }} / {{ book.total_copies }} verfügbar</span>
+                        {% else %}
+                            <span class="badge badge-warning">Alle Exemplare ausgeliehen</span>
+                        {% endif %}
+                    </td>
+                    <td style="width: 15%;">
+                        {% if book.available_copies > 0 and current_user.is_authenticated %}
+                            <a href="{{ url_for('users.borrow_book', book_id=book._id) }}" class="btn btn-sm btn-primary">Ausleihen</a>
+                        {% endif %}
+                        {% if current_user.is_authenticated and current_user.role in ['admin', 'librarian'] %}
+                            <a href="{{ url_for('books.edit_book', book_id=book._id) }}" class="btn btn-sm btn-secondary mt-1">Bearbeiten</a>
+                            <a href="{{ url_for('books.delete_book', book_id=book._id) }}" class="btn btn-sm btn-danger mt-1" onclick="return confirm('Sind Sie sicher?');">Löschen</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">Keine Bücher gefunden.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

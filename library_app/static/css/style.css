@@ -1,0 +1,65 @@
+/*  library_app/static/css/style.css 
+    Enthält alle benutzerdefinierten CSS-Regeln für die Bibliotheks-Anwendung.
+*/
+
+body {
+    background-color: #f8f9fa;
+}
+
+.table-container {
+    overflow-y: auto; 
+    border: 1px solid #dee2e6;
+    border-radius: .25rem;
+    border-top: none;
+}
+
+.table-container table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.table-fixed-header {
+    width: 100%;
+    border-bottom: none;
+    table-layout: fixed;
+}
+
+.table-fixed-header th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa;
+    z-index: 10;
+}
+
+.autocomplete {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    top: 100%;
+    left: 0;
+    right: 0;
+}
+
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+}
+
+.autocomplete-items div:hover {
+    background-color: #e9e9e9;
+}
+
+.autocomplete-active {
+    background-color: DodgerBlue !important;
+    color: #ffffff;
+}

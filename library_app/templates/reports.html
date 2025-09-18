@@ -1,0 +1,92 @@
+<!--   
+   library_app/templates/reports.html
+   Erweitert layout.html indem es verschiedene Berichte über Top Bücher und Top Benutzer, 
+   als auch über überfällige Bücher ermöglicht.
+-->
+
+{% extends 'layout.html' %}
+{% block content %}
+    <h2>Berichte</h2>
+    <hr>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4>Top 5 meist ausgeliehene Bücher</h4>
+                <a href="{{ url_for('main.export_top_books_report_csv') }}" class="btn btn-sm btn-outline-info">Exportieren</a>
+            </div>
+            {% if top_books %}
+                <ul class="list-group">
+                    {% for book in top_books %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ book.title }} (von {{ book.author_name }})
+                            <span class="badge badge-primary badge-pill">{{ book.loan_count }} Ausleihen</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Noch keine Ausleihdaten vorhanden.</p>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4>Top 5 aktivste Nutzer</h4>
+                <a href="{{ url_for('main.export_top_users_report_csv') }}" class="btn btn-sm btn-outline-info">Exportieren</a>
+            </div>
+            {% if top_users %}
+                <ul class="list-group">
+                    {% for user in top_users %}
+                         <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ user.username }}
+                            <span class="badge badge-primary badge-pill">{{ user.loan_count }} Ausleihen</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Noch keine Ausleihdaten vorhanden.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4>Überfällige Bücher</h4>
+                <a href="{{ url_for('main.export_overdue_books_report_csv') }}" class="btn btn-sm btn-outline-info">Exportieren</a>
+            </div>
+            
+            {% if overdue_loans %}
+                <table class="table table-striped table-fixed-header">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Nutzer</th>
+                            <th style="width: 40%;">Buchtitel</th>
+                            <th style="width: 20%;">Fällig am</th>
+                            <th style="width: 15%;">Tage überfällig</th>
+                        </tr>
+                    </thead>
+                </table>
+                
+                <div class="table-container">
+                    <table class="table table-striped table-hover">
+                        <tbody>
+                            {% for loan in overdue_loans %}
+                            <tr>
+                                <td style="width: 25%;">{{ loan.username }}</td>
+                                <td style="width: 40%;">{{ loan.book_title }}</td>
+                                <td style="width: 20%;">{{ loan.due_date.strftime('%d.%m.%Y') }}</td>
+                                <td style="width: 15%;"><span class="badge badge-danger">{{ loan.days_overdue|int }} Tage</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-success">Aktuell sind keine Bücher überfällig. Sehr gut!</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,40 @@
+<!--   
+   library_app/templates/user_profile.html
+   Erweitert layout.html mit einem Benutzerprofil, indem die ausgeliehenen Bücher angezeigt werden.
+-->
+
+{% extends 'layout.html' %}
+{% block content %}
+    <h2>Mein Profil: {{ current_user.username }}</h2>
+    <h4>Aktuell ausgeliehene Bücher</h4>
+    {% if loans %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Buchtitel</th>
+                    <th>Ausgeliehen am</th>
+                    <th>Fällig am</th>
+                    <th>Aktion</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for loan in loans %}
+                    <tr>
+                        <td>{{ loan.book_title }}</td>
+                        <td>{{ loan.loan_date.strftime('%d.%m.%Y') }}</td>
+                        <td {% if not loan.return_date and loan.due_date < now %}class="text-danger font-weight-bold"{% endif %}>
+                            {{ loan.due_date.strftime('%d.%m.%Y') }}
+                            {% if not loan.return_date and loan.due_date < now %} (Überfällig!){% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('users.return_book', loan_id=loan._id) }}" class="btn btn-info btn-sm">Zurückgeben</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Sie haben aktuell keine Bücher ausgeliehen.</p>
+    {% endif %}
+{% endblock %}

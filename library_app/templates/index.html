@@ -1,0 +1,21 @@
+<!--   
+   library_app/templates/index.html
+   Erweitert layout.html indem es die Startseite zur Verfügung stellt. 
+-->
+
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="jumbotron">
+        <h1 class="display-4">Willkommen in der Bibliothek!</h1>
+        <p class="lead">Verwalten Sie Bücher, Autoren und Ausleihen einfach und effizient.</p>
+        <hr class="my-4">
+        {% if current_user.is_authenticated %}
+        <p>Nutzen Sie die Navigation, um die verschiedenen Bereiche zu erkunden.</p>
+        <a class="btn btn-primary btn-lg" href="{{ url_for('books.list_books') }}" role="button">Alle Bücher anzeigen</a>
+        {% else %}
+        <p>Bitte melden Sie sich an oder registrieren Sie sich, um die Funktionen der Bibliothek zu nutzen.</p>
+        <a class="btn btn-primary btn-lg" href="{{ url_for('auth.login') }}" role="button">Anmelden</a>
+        <a class="btn btn-secondary btn-lg" href="{{ url_for('auth.register') }}" role="button">Registrieren</a>
+        {% endif %}
+    </div>
+{% endblock %}

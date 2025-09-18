@@ -1,0 +1,46 @@
+<!--   
+   library_app/templates/user_loans.html
+   Erweitert layout.html mit einer Übersicht über die ausgeliehenen Bücher des ausgewählten
+   Nutzers für Admins und Bibliothekare
+-->
+
+{% extends 'layout.html' %}
+{% block content %}
+    <h3>Ausleihhistorie für: {{ user.username }}</h3>
+    <a href="{{ url_for('users.list_users') }}" class="btn btn-primary mb-3">Zurück zur Benutzerliste</a>
+    {% if loans %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Buchtitel</th>
+                    <th>Ausgeliehen am</th>
+                    <th>Fällig am</th>
+                    <th>Zurückgegeben am</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for loan in loans %}
+                    <tr>
+                        <td>{{ loan.book_title }}</td>
+                        <td>{{ loan.loan_date.strftime('%d.%m.%Y') }}</td>
+                        <td {% if not loan.return_date and loan.due_date < now %}class="text-danger font-weight-bold"{% endif %}>
+                            {{ loan.due_date.strftime('%d.%m.%Y') }}
+                        </td>
+                        <td>
+                            {% if loan.return_date %}{{ loan.return_date.strftime('%d.%m.%Y') }}{% else %}-{% endif %}
+                        </td>
+                        <td>
+                            {% if loan.return_date %}<span class="badge badge-success">Zurückgegeben</span>
+                            {% elif loan.due_date < now %}<span class="badge badge-danger">Überfällig</span>
+                            {% else %}<span class="badge badge-warning">Ausgeliehen</span>{% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Dieser Nutzer hat keine Ausleihhistorie.</p>
+    {% endif %}
+{% endblock %}

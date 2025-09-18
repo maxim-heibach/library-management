@@ -1,0 +1,21 @@
+<!--   
+   library_app/templates/user_edit_form.html
+   Erweitert layout.html mit einer Maske zum Ändern der Rolle eines Benutzers.
+-->
+
+{% extends 'layout.html' %}
+{% block content %}
+    <h2>Rolle für {{ user.username }} bearbeiten</h2>
+    <form method="POST" action="{{ url_for('users.edit_user', user_id=user._id) }}">
+        <div class="form-group">
+            <label for="role">Rolle</label>
+            <select class="form-control" id="role" name="role">
+                <option value="user" {% if user.role == 'user' %}selected{% endif %}>Nutzer</option>
+                <option value="librarian" {% if user.role == 'librarian' %}selected{% endif %}>Bibliothekar</option>
+                <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Speichern</button>
+        <a href="{{ url_for('users.list_users') }}" class="btn btn-secondary">Abbrechen</a>
+    </form>
+{% endblock %}
