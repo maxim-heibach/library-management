@@ -1,4 +1,4 @@
-# Bibliotheksverwaltung (Python, Flask, MongoDB)
+# Bibliotheksverwaltung (Python, Flask, MongoDB, HTML, Java, CSS)
 Einsendeaufgabencode: Ersatzleistung berufspraktische Phase im Fachbereich Informatik
 Bearbeiter: Maxim Heibach  
 Matrikelnummer: 909442      
